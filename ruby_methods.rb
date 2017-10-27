@@ -17,13 +17,20 @@ module Enumerable
 
   def my_select
     selected_elements = {} if self.class == Hash
-    selected_elements = [] if self.class == Array
+    selected_elements = [] if self.class == Array || self.class == Range
 
-    self.my_each do |e|
-      if yield(e) == true
-        selected_elements.push(e)
+    if self.class == Array || self.class == Range
+      self.my_each do |e|
+        if yield(e) == true
+          selected_elements.push(e)
+        end
       end
+    elsif self.class == Hash
+          for key, value in self
+            selected_elements[key] = value if (yield(key, value))
+          end
     end
+
     selected_elements
   end
 
@@ -91,6 +98,5 @@ module Enumerable
     end
     val
   end
-
 
 end
